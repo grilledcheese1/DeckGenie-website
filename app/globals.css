@@ -1,26 +1,115 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-primary: #0c0a09;
+  --bg-secondary: #1c1917;
+  --bg-tertiary: #292524;
+
+  --text-primary: #f5f5f4;
+  --text-secondary: #a8a29e;
+  --text-tertiary: #78716c;
+
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-subtle: #064e3b;
+  --accent-text: #6ee7b7;
+  --hanzi-color: #34d399;
+
+  --border: #292524;
+  --border-subtle: #1c1917;
+  --border-accent: rgba(5, 150, 105, 0.35);
+
+  --section-gap: 96px;
+  --card-radius: 16px;
+  --button-radius: 9999px;
+
+  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --card-shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.6);
+
+  --orb-emerald: rgba(5, 150, 105, 0.07);
+  --orb-teal: rgba(52, 211, 153, 0.05);
+  --orb-jade: rgba(6, 78, 59, 0.15);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --font-sans: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-hanzi: var(--font-noto-serif-sc), 'Noto Serif SC', 'STSong', serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.font-hanzi {
+  font-family: var(--font-noto-serif-sc), 'Noto Serif SC', 'STSong', serif;
+}
+
+.gsap-hidden {
+  opacity: 0;
+}
+
+.clip-wipe {
+  clip-path: inset(0 100% 0 0);
+  display: inline-block;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-subtle);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+@keyframes neon-flicker {
+  0%   { opacity: 1; }
+  2%   { opacity: 0.8; }
+  4%   { opacity: 1; }
+  8%   { opacity: 0.7; }
+  10%  { opacity: 1; }
+  50%  { opacity: 1; }
+  52%  { opacity: 0.85; }
+  54%  { opacity: 1; }
+  92%  { opacity: 1; }
+  94%  { opacity: 0.75; }
+  96%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%       { opacity: 1; }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
 }
