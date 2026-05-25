@@ -152,7 +152,7 @@ export default function CTA() {
         }}>
           Already have an account?{' '}
           <a
-            href={APP_URL}
+            href={`${APP_URL}/login`}
             style={{ color: 'var(--accent-text)', textDecoration: 'none' }}
           >
             Log in →
