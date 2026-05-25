@@ -211,7 +211,7 @@ export default function Hero() {
           {/* CTAs */}
           <div ref={ctaRef} className="gsap-hidden" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' as const }}>
             <a
-              href={APP_URL}
+              href={`${APP_URL}/signup`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

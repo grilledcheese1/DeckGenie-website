@@ -62,7 +62,7 @@ export default function Nav() {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <a
-          href={APP_URL}
+          href={`${APP_URL}/login`}
           style={{
             fontSize: 15,
             fontWeight: 500,
@@ -85,7 +85,7 @@ export default function Nav() {
           Log in
         </a>
         <a
-          href={APP_URL}
+          href={`${APP_URL}/signup`}
           style={{
             fontSize: 15,
             fontWeight: 500,
