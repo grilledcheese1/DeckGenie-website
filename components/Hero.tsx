@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
@@ -22,6 +23,7 @@ export default function Hero() {
   const mockupRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollToPlugin)
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) {
       charRefs.current.forEach(el => { if (el) el.style.clipPath = 'inset(0 0% 0 0)' })
@@ -236,8 +238,12 @@ export default function Hero() {
             >
               Start for free →
             </a>
-            <a
-              href="#features"
+            <button
+              onClick={() => gsap.to(window, {
+                scrollTo: { y: '#practice-preview', offsetY: 80 },
+                duration: 0.15,
+                ease: 'power3.inOut',
+              })}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -247,7 +253,8 @@ export default function Hero() {
                 color: 'var(--text-secondary)',
                 fontSize: 15,
                 fontWeight: 500,
-                textDecoration: 'none',
+                background: 'transparent',
+                cursor: 'pointer',
                 transition: 'color 0.2s ease, border-color 0.2s ease',
               }}
               onMouseEnter={e => {
@@ -260,7 +267,7 @@ export default function Hero() {
               }}
             >
               See how it works
-            </a>
+            </button>
           </div>
         </div>
 
