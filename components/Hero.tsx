@@ -25,17 +25,63 @@ export default function Hero() {
   useEffect(() => {
     gsap.registerPlugin(ScrollToPlugin)
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) {
-      charRefs.current.forEach(el => { if (el) el.style.clipPath = 'inset(0 0% 0 0)' })
-      return
+
+    const showAll = () => {
+      charRefs.current.forEach(el => {
+        if (el) {
+          el.classList.remove('clip-wipe')
+          el.style.clipPath = 'inset(0 0% 0 0)'
+        }
+      })
+      if (taglineRef.current) {
+        taglineRef.current.classList.remove('gsap-hidden')
+        taglineRef.current.style.opacity = '1'
+        taglineRef.current.style.transform = 'none'
+      }
+      if (ctaRef.current) {
+        ctaRef.current.classList.remove('gsap-hidden')
+        ctaRef.current.style.opacity = '1'
+        ctaRef.current.style.transform = 'none'
+      }
+      if (mockupRef.current) {
+        mockupRef.current.classList.remove('gsap-hidden')
+        mockupRef.current.style.opacity = '1'
+        mockupRef.current.style.transform = 'none'
+      }
     }
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.2 })
+    const handlePageShow = (e: PageTransitionEvent) => { if (e.persisted) showAll() }
+    window.addEventListener('pageshow', handlePageShow)
 
-      tl.fromTo(
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+    const isBackNav = navEntry?.type === 'back_forward'
+
+    if (prefersReduced || isBackNav) {
+      showAll()
+      return () => window.removeEventListener('pageshow', handlePageShow)
+    }
+
+    // Strip CSS hiding classes so GSAP exclusively owns visibility via inline styles.
+    // The classes remain in JSX for SSR (prevents FOUC), but from this point forward
+    // no CSS class can re-assert itself after a re-render or bfcache restore.
+    charRefs.current.forEach(el => el?.classList.remove('clip-wipe'))
+    taglineRef.current?.classList.remove('gsap-hidden')
+    ctaRef.current?.classList.remove('gsap-hidden')
+    mockupRef.current?.classList.remove('gsap-hidden')
+
+    // Re-establish hidden state as pure inline style before animating
+    gsap.set(charRefs.current.filter(Boolean), { clipPath: 'inset(0 100% 0 0)' })
+    gsap.set(taglineRef.current, { opacity: 0, y: 20 })
+    gsap.set(ctaRef.current,     { opacity: 0, y: 16 })
+    gsap.set(mockupRef.current,  { opacity: 0, y: 24, scale: 0.97 })
+
+    let tl: gsap.core.Timeline | undefined
+
+    const ctx = gsap.context(() => {
+      tl = gsap.timeline({ delay: 0.2 })
+
+      tl.to(
         charRefs.current.filter(Boolean),
-        { clipPath: 'inset(0 100% 0 0)' },
         {
           clipPath: 'inset(0 0% 0 0)',
           duration: 0.65,
@@ -43,27 +89,21 @@ export default function Hero() {
           ease: 'power3.out',
         }
       )
-      .fromTo(
-        taglineRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
-        '-=0.2'
-      )
-      .fromTo(
-        ctaRef.current,
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-        '-=0.3'
-      )
-      .fromTo(
-        mockupRef.current,
-        { opacity: 0, y: 24, scale: 0.97 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power3.out' },
-        '-=0.4'
-      )
+      .to(taglineRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.2')
+      .to(ctaRef.current,     { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.3')
+      .to(mockupRef.current,  { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power3.out' }, '-=0.4')
     }, sectionRef)
 
-    return () => ctx.revert()
+    // Jump the animation to its end state before bfcache freezes the page,
+    // so elements are captured as fully visible regardless of when the user navigated away.
+    const handlePageHide = () => tl?.progress(1)
+    window.addEventListener('pagehide', handlePageHide)
+
+    return () => {
+      ctx.kill()
+      window.removeEventListener('pagehide', handlePageHide)
+      window.removeEventListener('pageshow', handlePageShow)
+    }
   }, [])
 
   return (

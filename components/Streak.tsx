@@ -21,46 +21,63 @@ export default function Streak() {
     gsap.registerPlugin(ScrollTrigger)
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    const ctx = gsap.context(() => {
-      if (!prefersReduced) {
-        STATS.forEach((stat, i) => {
-          const el = counterRefs.current[i]
-          if (!el) return
-          const obj = { val: 0 }
-          gsap.to(obj, {
-            val: stat.value,
-            duration: 1.2,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 85%',
-              once: true,
-            },
-            onUpdate: () => {
-              el.textContent = Math.round(obj.val).toLocaleString()
-            },
-          })
+    const showAll = () => {
+      STATS.forEach((stat, i) => {
+        const el = counterRefs.current[i]
+        if (el) el.textContent = stat.value.toLocaleString()
+      })
+      if (sectionRef.current) {
+        sectionRef.current.querySelectorAll('.streak-card').forEach((el) => {
+          (el as HTMLElement).style.opacity = '1'
         })
+      }
+    }
 
-        if (sectionRef.current) {
-          gsap.fromTo(
-            sectionRef.current.querySelectorAll('.streak-card'),
-            { opacity: 0, y: 20 },
-            {
-              opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: 'power3.out',
-              scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
-            }
-          )
-        }
-      } else {
-        STATS.forEach((stat, i) => {
-          const el = counterRefs.current[i]
-          if (el) el.textContent = stat.value.toLocaleString()
+    const handlePageShow = (e: PageTransitionEvent) => { if (e.persisted) showAll() }
+    window.addEventListener('pageshow', handlePageShow)
+
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+    const isBackNav = navEntry?.type === 'back_forward'
+
+    if (prefersReduced || isBackNav) {
+      showAll()
+      return () => window.removeEventListener('pageshow', handlePageShow)
+    }
+
+    const ctx = gsap.context(() => {
+      STATS.forEach((stat, i) => {
+        const el = counterRefs.current[i]
+        if (!el) return
+        const obj = { val: 0 }
+        gsap.to(obj, {
+          val: stat.value,
+          duration: 1.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            once: true,
+          },
+          onUpdate: () => {
+            el.textContent = Math.round(obj.val).toLocaleString()
+          },
+        })
+      })
+
+      if (sectionRef.current) {
+        const cards = sectionRef.current.querySelectorAll('.streak-card')
+        gsap.set(cards, { opacity: 0 })
+        gsap.to(cards, {
+          opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: 'power3.out',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
         })
       }
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => {
+      ctx.kill()
+      window.removeEventListener('pageshow', handlePageShow)
+    }
   }, [])
 
   return (
@@ -145,7 +162,6 @@ export default function Streak() {
               borderRadius: 'var(--card-radius)',
               padding: '32px 28px',
               textAlign: 'center',
-              opacity: 0,
             }}
           >
             <div

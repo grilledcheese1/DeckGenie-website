@@ -39,7 +39,7 @@ export default function Nav() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 32px',
-        backgroundColor: scrolled ? 'rgba(12, 10, 9, 0.85)' : 'transparent',
+        backgroundColor: scrolled ? 'var(--nav-bg-scrolled)' : 'transparent',
         backdropFilter: scrolled ? 'blur(12px)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
         borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
@@ -47,7 +47,7 @@ export default function Nav() {
       }}
     >
       <a
-        href="#hero"
+        href="/"
         className="font-hanzi"
         style={{
           fontSize: '1.5rem',
