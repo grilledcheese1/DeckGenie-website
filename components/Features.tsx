@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { THEMES, applyTheme, type Theme, type ThemeId } from '@/lib/theme'
 
 const FEATURE_CARDS = [
   {
@@ -37,43 +38,14 @@ const FEATURE_CARDS = [
   },
 ]
 
-const THEMES = [
-  {
-    name: 'Ink & Jade',
-    bg: '#0c0a09',
-    bgCard: '#1c1917',
-    border: '#292524',
-    accent: '#059669',
-    accentText: '#6ee7b7',
-    text: '#f5f5f4',
-    textMuted: '#a8a29e',
-    hanzi: '#34d399',
-  },
-  {
-    name: 'Vermillion & Cream',
-    bg: '#fdf6ec',
-    bgCard: '#f5ead8',
-    border: '#e8d5b7',
-    accent: '#c0392b',
-    accentText: '#c0392b',
-    text: '#2c1810',
-    textMuted: '#7c5c3e',
-    hanzi: '#c0392b',
-  },
-  {
-    name: 'Bamboo Light',
-    bg: '#f9fafb',
-    bgCard: '#f3f4f6',
-    border: '#e5e7eb',
-    accent: '#4d7c5f',
-    accentText: '#4d7c5f',
-    text: '#1a1a1a',
-    textMuted: '#4b5563',
-    hanzi: '#4d7c5f',
-  },
-]
-
 export default function Features() {
+  const [selectedTheme, setSelectedTheme] = useState<ThemeId>('ink-jade')
+
+  const handleThemeSelect = (id: ThemeId) => {
+    applyTheme(id)
+    setSelectedTheme(id)
+  }
+
   const sectionRef = useRef<HTMLElement>(null)
   const gridRef = useRef<HTMLDivElement>(null)
   const row1Ref = useRef<HTMLDivElement>(null)
@@ -333,12 +305,32 @@ export default function Features() {
           gap: 24,
         }}>
           {THEMES.map(theme => (
-            <div key={theme.name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-              <ThemeMockup theme={theme} />
-              <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-secondary)', textAlign: 'center' }}>
+            <button
+              key={theme.id}
+              onClick={() => handleThemeSelect(theme.id)}
+              aria-label={`Switch page to ${theme.name} theme`}
+              aria-pressed={selectedTheme === theme.id}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 16,
+                background: 'transparent',
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+              }}
+            >
+              <ThemeMockup theme={theme} isSelected={selectedTheme === theme.id} />
+              <div style={{
+                fontSize: 14,
+                fontWeight: 500,
+                color: selectedTheme === theme.id ? 'var(--accent-text)' : 'var(--text-secondary)',
+                textAlign: 'center',
+              }}>
                 {theme.name}
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -430,29 +422,46 @@ function CharAnalysisMockup() {
   )
 }
 
-interface Theme {
-  name: string
-  bg: string
-  bgCard: string
-  border: string
-  accent: string
-  accentText: string
-  text: string
-  textMuted: string
-  hanzi: string
-}
-
-function ThemeMockup({ theme }: { theme: Theme }) {
+function ThemeMockup({ theme, isSelected }: { theme: Theme; isSelected: boolean }) {
   return (
     <div style={{
+      position: 'relative',
       width: '100%',
       maxWidth: 280,
       borderRadius: 24,
       overflow: 'hidden',
-      border: `1px solid ${theme.border}`,
-      boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+      border: isSelected ? `2px solid ${theme.accent}` : `1px solid ${theme.border}`,
+      boxShadow: isSelected
+        ? `0 0 0 3px ${theme.accent}33, 0 8px 32px rgba(0,0,0,0.3)`
+        : '0 8px 32px rgba(0,0,0,0.3)',
       backgroundColor: theme.bg,
+      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
     }}>
+      {isSelected && (
+        <div style={{
+          position: 'absolute',
+          top: 12,
+          right: 12,
+          width: 22,
+          height: 22,
+          borderRadius: '50%',
+          backgroundColor: theme.accent,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1,
+        }}>
+          <svg width="11" height="11" viewBox="0 0 10 10" fill="none">
+            <path
+              d="M2 5l2.5 2.5L8 3"
+              stroke="#fff"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      )}
       {/* Status bar mock */}
       <div style={{
         height: 32, backgroundColor: theme.bg,
@@ -508,7 +517,7 @@ function ThemeMockup({ theme }: { theme: Theme }) {
           textAlign: 'center',
           fontSize: 13,
           fontWeight: 600,
-          color: theme.name === 'Ink & Jade' ? '#fff' : '#fff',
+          color: '#fff',
         }}>
           Sign in
         </div>
