@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -40,6 +40,11 @@ const STEPS = [
 export default function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
   const stepsRef = useRef<HTMLDivElement>(null)
+  const [activeSteps, setActiveSteps] = useState<Set<number>>(new Set([0]))
+
+  const activateStep = (i: number) => {
+    setActiveSteps(prev => (prev.has(i) ? prev : new Set(prev).add(i)))
+  }
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
@@ -111,16 +116,32 @@ export default function HowItWorks() {
             position: 'relative',
           }}
         >
-          {/* Connector line */}
-          <div aria-hidden style={{
-            position: 'absolute',
-            top: 36,
-            left: '10%',
-            right: '10%',
-            height: 1,
-            backgroundColor: 'var(--border)',
-            zIndex: 0,
-          }} />
+          {/* Connector line segments — segment i sits between step i and step i+1,
+              and fills in when step i+1 becomes active */}
+          {[0, 1, 2, 3].map(i => (
+            <div
+              key={`connector-${i}`}
+              aria-hidden
+              className="how-connector"
+              style={{
+                position: 'absolute',
+                top: 36,
+                left: `${10 + i * 20}%`,
+                width: '20%',
+                height: 1,
+                backgroundColor: 'var(--border)',
+                zIndex: 0,
+                overflow: 'hidden',
+              }}
+            >
+              <div style={{
+                height: '100%',
+                width: activeSteps.has(i + 1) ? '100%' : '0%',
+                backgroundColor: 'var(--accent)',
+                transition: 'width 0.5s ease',
+              }} />
+            </div>
+          ))}
 
           {STEPS.map((step, i) => (
             <div
@@ -137,24 +158,30 @@ export default function HowItWorks() {
               }}
             >
               {/* Number circle */}
-              <div style={{
-                width: 72,
-                height: 72,
-                borderRadius: '50%',
-                backgroundColor: i === 0 ? 'var(--accent)' : 'var(--bg-tertiary)',
-                border: `1px solid ${i === 0 ? 'var(--accent)' : 'var(--border)'}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: 20,
-                flexShrink: 0,
-              }}>
+              <div
+                onMouseEnter={() => activateStep(i)}
+                style={{
+                  width: 72,
+                  height: 72,
+                  borderRadius: '50%',
+                  backgroundColor: activeSteps.has(i) ? 'var(--accent)' : 'var(--bg-tertiary)',
+                  border: `1px solid ${activeSteps.has(i) ? 'var(--accent)' : 'var(--border)'}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 20,
+                  flexShrink: 0,
+                  transition: 'background-color 0.35s ease, border-color 0.35s ease',
+                  cursor: 'default',
+                }}
+              >
                 <span
                   className="font-hanzi"
                   style={{
                     fontSize: '1.75rem',
-                    color: i === 0 ? '#fff' : 'var(--hanzi-color)',
+                    color: activeSteps.has(i) ? '#fff' : 'var(--hanzi-color)',
                     lineHeight: 1,
+                    transition: 'color 0.35s ease',
                   }}
                 >
                   {step.char}
@@ -163,10 +190,11 @@ export default function HowItWorks() {
 
               <div style={{
                 fontSize: 11, fontWeight: 600,
-                color: i === 0 ? 'var(--accent-text)' : 'var(--text-tertiary)',
+                color: activeSteps.has(i) ? 'var(--accent-text)' : 'var(--text-tertiary)',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase' as const,
                 marginBottom: 8,
+                transition: 'color 0.35s ease',
               }}>
                 Step {step.number}
               </div>
@@ -192,7 +220,7 @@ export default function HowItWorks() {
               grid-template-columns: 1fr !important;
               gap: 32px !important;
             }
-            section:has(.how-step) > div > div:last-child > div:first-child {
+            .how-connector {
               display: none !important;
             }
             .how-step {
@@ -205,6 +233,12 @@ export default function HowItWorks() {
               flex-shrink: 0 !important;
               width: 48px !important;
               height: 48px !important;
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .how-connector *, .how-step * {
+              transition: none !important;
             }
           }
         `}</style>
