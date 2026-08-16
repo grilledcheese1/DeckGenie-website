@@ -58,7 +58,7 @@ export default function Footer() {
           {([
             { label: 'About', href: '/about', external: false },
             { label: 'Privacy', href: '/privacy', external: false },
-            { label: 'Log in', href: APP_URL, external: false },
+            { label: 'Log in', href: `${APP_URL}/login`, external: false },
             { label: 'Sign up', href: `${APP_URL}/signup`, external: false },
           ] as { label: string; href: string; external: boolean }[]).map(link => (
             <a
