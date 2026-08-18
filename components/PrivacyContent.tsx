@@ -164,7 +164,7 @@ export default function PrivacyContent() {
 
           <PolicySection id="what-we-collect" title="What we collect">
             <p>
-              汉字练习 uses Supabase for authentication and data storage. The following tables describe
+              音吉 uses Supabase for authentication and data storage. The following tables describe
               exactly what is stored on your behalf when you create an account and use the app:
             </p>
 
@@ -223,7 +223,7 @@ export default function PrivacyContent() {
           </PolicySection>
 
           <PolicySection id="third-parties" title="Third-party services">
-            <p>汉字练习 uses the following third-party services:</p>
+            <p>音吉 uses the following third-party services:</p>
             <ul>
               <li>
                 <strong>Supabase</strong> — authentication and database hosting.
@@ -277,7 +277,7 @@ export default function PrivacyContent() {
 
           <PolicySection id="acceptable-use" title="Acceptable use">
             <p>
-              汉字练习 is a personal study tool. By using it, you agree not to:
+              音吉 is a personal study tool. By using it, you agree not to:
             </p>
             <ul>
               <li>Scrape, reverse-engineer, or redistribute the app or its API</li>
@@ -291,7 +291,7 @@ export default function PrivacyContent() {
 
           <PolicySection id="no-warranties" title="No warranties">
             <p>
-              汉字练习 is a student project, provided <strong>as-is</strong> without warranty of any kind.
+              音吉 is a student project, provided <strong>as-is</strong> without warranty of any kind.
               We make no guarantees about uptime, accuracy of grading, or suitability for any particular
               purpose — including passing your Chinese class (though we hope it helps).
             </p>

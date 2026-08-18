@@ -16,7 +16,7 @@ const notoSerifSC = Noto_Serif_SC({
 });
 
 export const metadata: Metadata = {
-  title: "汉字练习 — Learn Mandarin with AI",
+  title: "音吉 — Learn Mandarin with AI",
   description:
     "AI-powered Chinese vocabulary practice. HSK 1–6 word corpus, instant grading, character analysis, and progressive unlocks.",
 };

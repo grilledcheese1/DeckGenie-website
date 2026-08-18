@@ -482,7 +482,7 @@ function ThemeMockup({ theme, isSelected }: { theme: Theme; isSelected: boolean 
             lineHeight: 1,
             marginBottom: 4,
           }}>
-            汉字
+            音吉
           </div>
           <div style={{ fontSize: 11, color: theme.textMuted, letterSpacing: '0.15em', textTransform: 'uppercase' as const }}>
             Practice

@@ -4,9 +4,9 @@ import PrivacyContent from "@/components/PrivacyContent";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy & Terms — 汉字练习",
+  title: "Privacy & Terms — 音吉",
   description:
-    "Privacy policy and terms of use for 汉字练习. We collect the minimum needed to make the app work.",
+    "Privacy policy and terms of use for 音吉. We collect the minimum needed to make the app work.",
 };
 
 export default function PrivacyPage() {
