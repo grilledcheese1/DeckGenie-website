@@ -5,9 +5,9 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "About — 汉字练习",
+  title: "About — 音吉",
   description:
-    "汉字练习 was built by a university student who needed a better way to study Mandarin. Here's the story.",
+    "音吉 was built by a university student who needed a better way to study Mandarin. Here's the story.",
 };
 
 export default function AboutPage() {

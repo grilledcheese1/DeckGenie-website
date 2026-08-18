@@ -6,7 +6,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
-const HANZI_CHARS = ['汉', '字', '练', '习']
+const HANZI_CHARS = ['音', '吉']
 
 const NEON_SIGNS = [
   { text: '坚持', top: '12%', left: '-2%', size: 1.8, delay: 0.6 },
@@ -228,7 +228,7 @@ export default function Hero() {
               letterSpacing: '0.12em',
             }}
           >
-            Hàn Zì Liàn Xí
+            Inkitsu
           </div>
 
           {/* Tagline */}

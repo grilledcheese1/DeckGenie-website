@@ -57,7 +57,7 @@ export default function Nav() {
           letterSpacing: '0.02em',
         }}
       >
-        汉字
+        音吉
       </a>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

@@ -31,10 +31,10 @@ export default function Footer() {
               marginBottom: 4,
             }}
           >
-            汉字练习
+            音吉
           </div>
           <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
-            © {year} 汉字练习
+            © {year} 音吉
           </div>
         </div>
 
